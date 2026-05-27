@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #667eea; margin-bottom: 8px; font-size: 28px; }
+        .subtitle { color: #888; margin-bottom: 30px; font-size: 14px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+        .info-card {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 16px;
+            border-left: 4px solid #667eea;
+        }
+        .info-card .label { font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: 1px; }
+        .info-card .value { font-size: 16px; font-weight: 600; color: #333; margin-top: 4px; word-break: break-all; }
+        .tech-stack {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .endpoints {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .endpoints h3 { font-size: 14px; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .endpoint-list { list-style: none; }
+        .endpoint-list li {
+            padding: 8px 12px;
+            background: #f8f9ff;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .endpoint-list li span { color: #667eea; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ app_name }}</h1>
+        <p class="subtitle">Learning Kubernetes, Docker & Terraform</p>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="label">Version</div>
+                <div class="value">{{ version }}</div>
+            </div>
+            <div class="info-card">
+                <div class="label">Environment</div>
+                <div class="value">{{ environment }}</div>
+            </div>
+            <div class="info-card">
+                <div class="label">Hostname (Pod)</div>
+                <div class="value">{{ hostname }}</div>
+            </div>
+            <div class="info-card">
+                <div class="label">Timestamp</div>
+                <div class="value">{{ timestamp }}</div>
+            </div>
+        </div>
+        <div class="tech-stack">
+            <span class="badge">Docker</span>
+            <span class="badge">Kubernetes</span>
+            <span class="badge">Terraform</span>
+            <span class="badge">Minikube</span>
+            <span class="badge">Python</span>
+        </div>
+        <div class="endpoints">
+            <h3>API Endpoints</h3>
+            <ul class="endpoint-list">
+                <li><span>GET /</span> - This page</li>
+                <li><span>GET /health</span> - Health check (liveness probe)</li>
+                <li><span>GET /ready</span> - Readiness check</li>
+                <li><span>GET /info</span> - App info (JSON)</li>
+                <li><span>GET /stress</span> - CPU stress test (HPA demo)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

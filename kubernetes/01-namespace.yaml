@@ -1,0 +1,13 @@
+# =============================================================
+# Namespace: Isolates resources for this POC
+# =============================================================
+# LEARN: Namespaces provide logical isolation in a K8s cluster.
+# They let you organize resources and apply policies per-namespace.
+# =============================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: poc-app
+  labels:
+    project: k8s-docker-terraform-poc
+    environment: development

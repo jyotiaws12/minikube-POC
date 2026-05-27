@@ -1,0 +1,35 @@
+# =============================================================
+# Ingress: HTTP routing and virtual hosting
+# =============================================================
+# LEARN: Ingress manages external HTTP(S) access to services.
+# It provides URL-based routing, SSL termination, and
+# name-based virtual hosting.
+#
+# Prerequisites for Minikube:
+#   minikube addons enable ingress
+#
+# After deploying, add to /etc/hosts:
+#   $(minikube ip)  poc-app.local
+# =============================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: poc-app-ingress
+  namespace: poc-app
+  labels:
+    app: poc-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: poc-app.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: poc-app-clusterip
+                port:
+                  number: 80
