@@ -1,0 +1,19 @@
+# =============================================================
+# ConfigMap: Externalize configuration from your application
+# =============================================================
+# LEARN: ConfigMaps decouple configuration from container images.
+# This makes your containers portable across environments.
+# Values here are injected as environment variables in the Pod.
+# =============================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: poc-app-config
+  namespace: poc-app
+  labels:
+    app: poc-app
+data:
+  APP_NAME: "K8s-Docker-Terraform POC"
+  APP_VERSION: "1.0.0"
+  ENVIRONMENT: "development"
+  PORT: "5000"

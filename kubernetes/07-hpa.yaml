@@ -1,0 +1,46 @@
+# =============================================================
+# HorizontalPodAutoscaler: Auto-scale based on metrics
+# =============================================================
+# LEARN: HPA automatically adjusts the number of pod replicas
+# based on CPU/memory usage or custom metrics.
+#
+# Prerequisites for Minikube:
+#   minikube addons enable metrics-server
+#
+# Test autoscaling by hitting the /stress endpoint:
+#   while true; do curl -s http://<service-url>/stress > /dev/null; done
+# =============================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: poc-app-hpa
+  namespace: poc-app
+  labels:
+    app: poc-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: poc-app
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 120
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60

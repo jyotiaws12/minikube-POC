@@ -1,0 +1,45 @@
+# =============================================================
+# PersistentVolume & PersistentVolumeClaim: Storage
+# =============================================================
+# LEARN: Pods are ephemeral - when they restart, data is lost.
+# PersistentVolumes (PV) provide durable storage that survives
+# pod restarts. PersistentVolumeClaims (PVC) are requests for
+# storage by pods.
+#
+# In Minikube, storage is provided by the hostPath provisioner.
+# In production, you'd use cloud storage (EBS, GCE PD, etc.)
+# =============================================================
+
+# --- PersistentVolume ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: poc-app-pv
+  labels:
+    app: poc-app
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/poc-app
+
+---
+# --- PersistentVolumeClaim ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: poc-app-pvc
+  namespace: poc-app
+  labels:
+    app: poc-app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi

@@ -1,0 +1,92 @@
+# =============================================================
+# Deployment: Manages ReplicaSets and rolling updates
+# =============================================================
+# LEARN: A Deployment tells Kubernetes HOW to run your app:
+#   - How many replicas (pods) to maintain
+#   - Which container image to use
+#   - Resource limits (CPU/memory)
+#   - Health checks (liveness & readiness probes)
+#   - Rolling update strategy
+# =============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc-app
+  namespace: poc-app
+  labels:
+    app: poc-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: poc-app
+  # Rolling update strategy: replace pods gradually
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1          # max extra pods during update
+      maxUnavailable: 0     # zero downtime
+  template:
+    metadata:
+      labels:
+        app: poc-app
+        version: "1.0.0"
+    spec:
+      containers:
+        - name: poc-app
+          image: poc-app:latest
+          # IMPORTANT: For Minikube, use imagePullPolicy: Never
+          # after building the image inside Minikube's Docker daemon
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          # --- Environment from ConfigMap ---
+          envFrom:
+            - configMapRef:
+                name: poc-app-config
+          # --- Environment from Secret ---
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: poc-app-secret
+                  key: SECRET_KEY
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: poc-app-secret
+                  key: DB_PASSWORD
+          # --- Resource Limits ---
+          # LEARN: Always set resource requests and limits!
+          # Requests = guaranteed resources, Limits = maximum allowed
+          resources:
+            requests:
+              cpu: "100m"       # 0.1 CPU core
+              memory: "128Mi"   # 128 MB RAM
+            limits:
+              cpu: "250m"       # 0.25 CPU core
+              memory: "256Mi"   # 256 MB RAM
+          # --- Liveness Probe ---
+          # LEARN: K8s uses this to know if the container is alive.
+          # If it fails, the container is restarted.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # --- Readiness Probe ---
+          # LEARN: K8s uses this to know if the container can
+          # accept traffic. If it fails, the pod is removed from
+          # the Service endpoints.
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
