@@ -1,0 +1,3 @@
+# The agents/orchestrator use only the Python standard library.
+# pytest is required so the Tester agent can run the suites it generates.
+pytest>=8.0
